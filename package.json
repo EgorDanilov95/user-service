@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "bcrypt": "^6.0.0",
     "koa": "^3.2.0",
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^14.0.0",
