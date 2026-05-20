@@ -6,14 +6,14 @@ export const authMiddleware = async (ctx: Context, next: Next) => {
   
   if (!authHeader) {
     ctx.status = 401;
-    ctx.body = { message: 'Отсутствует заголовок Authorization' };
+    ctx.body = { message: 'Authorization header is missing' };
     return;
   }
   
   const parts = authHeader.split(' ');
   if (parts.length !== 2 || parts[0] !== 'Bearer') {
     ctx.status = 401;
-    ctx.body = { message: 'Неверный формат заголовка Authorization. Используйте: Bearer <token>' };
+    ctx.body = { message: 'incorrect Authorization header. Use: Bearer <token>' };
     return;
   }
   
@@ -22,7 +22,13 @@ export const authMiddleware = async (ctx: Context, next: Next) => {
   const payload = verifyToken(token);
   if (!payload) {
     ctx.status = 401;
-    ctx.body = { message: 'Недействительный или просроченный токен' };
+    ctx.body = { message: 'incorrect or expired token' };
+    return;
+  }
+
+ if (payload.status === 'blocked') {
+    ctx.status = 403;
+    ctx.body = { message: 'Your account is blocked' };
     return;
   }
     ctx.state.user = payload;
